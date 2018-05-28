@@ -271,8 +271,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
             predictors: 'ion-log-in',
             outcomes: 'ion-log-out',
             study: 'ion-ios-book',
-            discoveries: 'ion-ios-analytics',
-            search: 'ion-search'
+            discoveries: 'ion-ios-analytics'
         },
         localNotifications: {
             localNotificationsPluginInstalled: function() {
@@ -601,15 +600,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                     qmService.goToState(qmStates.reminderAdd, {variableName: variableName});
                     $mdDialog.cancel();
                 }
-                var searchForMoreItem = {
-                    value: "search-for-more",
-                    name: "Search for more...",
-                    variable: null,
-                    ionIcon: qmService.ionIcons.search,
-                    subtitle: null
-                };
-                function querySearch (query, variableSearchSuccessHandler, variableSearchErrorHandler, force) {
-                    qmLog.info("query "+query);
+                function querySearch (query, variableSearchSuccessHandler, variableSearchErrorHandler) {
                     var deferred = $q.defer();
                     if(query === 'barcode'){
                         self.scanBarcode(deferred);
@@ -627,17 +618,12 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                         }
                     }
                     self.notFoundText = "No variables found. Please try another wording or contact mike@quantimo.do.";
-                    if(query === self.lastApiQuery && self.lastResults && !force){
-                        qmLog.info("Why are we researching with the same query?");
-                        var resultsList = convertVariablesToToResultsList(self.lastResults);
-                        if(true || !dialogParameters.requestParams.excludeLocal){resultsList.push(searchForMoreItem);}
-                        deferred.resolve(resultsList);
-                        //deferred.resolve(self.items);
+                    if(query === self.lastApiQuery && self.lastResults){
+                        qmLog.debug("Why are we researching with the same query?");
+                        deferred.resolve(convertVariablesToToResultsList(self.lastResults));
                         return deferred.promise;
                     }
-                    if(!dialogParameters.requestParams.excludeLocal){
-                        dialogParameters.requestParams.excludeLocal = self.dialogParameters.excludeLocal;
-                    }
+                    dialogParameters.requestParams.excludeLocal = self.dialogParameters.excludeLocal;
                     if(query && query !== ""){
                         dialogParameters.requestParams.searchPhrase = query;
                         self.lastApiQuery = query;
@@ -647,9 +633,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                         self.lastResults = variables;
                         qmLogService.debug('Got ' + self.lastResults.length + ' results matching ' + query);
                         showVariableList();
-                        var resultsList = convertVariablesToToResultsList(self.lastResults);
-                        if(true || !dialogParameters.requestParams.excludeLocal){resultsList.push(searchForMoreItem);}
-                        deferred.resolve(resultsList);
+                        deferred.resolve(convertVariablesToToResultsList(self.lastResults));
                         if(variables && variables.length){
                             if(variableSearchSuccessHandler){variableSearchSuccessHandler(variables);}
                         } else {
@@ -658,34 +642,9 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                     });
                     return deferred.promise;
                 }
-                self.querySearchAPI = function(){
-                    console.log("asdfasdf")
-                }
-                function searchTextChange(text) {
-                    qmLog.info('Text changed to ' + text);
-                    if(text === searchForMoreItem.name){
-                        querySearch(self.lastApiQuery);
-                    }
-                }
-                function removeSearchForMoreItem() {
-                    self.items = self.items.filter(function (itemFromList) {
-                        return itemFromList.name !== searchForMoreItem.name;
-                    });
-                }
+                function searchTextChange(text) { qmLogService.debug('Text changed to ' + text); }
                 function selectedItemChange(item) {
-                    qmLog.info('Item changed to ' + JSON.stringify(item));
-                    qmLog.info('self.searchText changed to ' + self.searchText);
                     if(!item){return;}
-                    if(item.name === searchForMoreItem.name){
-                        if(!dialogParameters.requestParams.excludeLocal){
-                            dialogParameters.requestParams.excludeLocal = true;
-                            self.searchText = self.lastApiQuery;
-                            querySearch(self.lastApiQuery, null, null, true);
-                        } else {
-                            //removeSearchForMoreItem();
-                        }
-                        return;
-                    }
                     self.selectedItem = item;
                     self.buttonText = "Select " + item.variable.name;
                     if(self.barcode){
@@ -695,7 +654,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                     $scope.variable = item.variable;
                     item.variable.lastSelectedAt = qm.timeHelper.getUnixTimestampInSeconds();
                     qm.userVariables.saveToLocalStorage(item.variable);
-                    qmLog.info('Item changed to ' + item.variable.name);
+                    qmLogService.debug('Item changed to ' + item.variable.name);
                     self.finish();
                 }
                 /**
