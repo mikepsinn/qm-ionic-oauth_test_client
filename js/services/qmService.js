@@ -271,7 +271,8 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
             predictors: 'ion-log-in',
             outcomes: 'ion-log-out',
             study: 'ion-ios-book',
-            discoveries: 'ion-ios-analytics'
+            discoveries: 'ion-ios-analytics',
+            search: 'ion-search'
         },
         localNotifications: {
             localNotificationsPluginInstalled: function() {
@@ -600,7 +601,15 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                     qmService.goToState(qmStates.reminderAdd, {variableName: variableName});
                     $mdDialog.cancel();
                 }
-                function querySearch (query, variableSearchSuccessHandler, variableSearchErrorHandler) {
+                var searchForMoreItem = {
+                    value: "search-for-more",
+                    name: "Search for more...",
+                    variable: null,
+                    ionIcon: qmService.ionIcons.search,
+                    subtitle: null
+                };
+                function querySearch (query, variableSearchSuccessHandler, variableSearchErrorHandler, force) {
+                    qmLog.info("query "+query);
                     var deferred = $q.defer();
                     if(query === 'barcode'){
                         self.scanBarcode(deferred);
@@ -618,12 +627,17 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                         }
                     }
                     self.notFoundText = "No variables found. Please try another wording or contact mike@quantimo.do.";
-                    if(query === self.lastApiQuery && self.lastResults){
-                        qmLog.debug("Why are we researching with the same query?");
-                        deferred.resolve(convertVariablesToToResultsList(self.lastResults));
+                    if(query === self.lastApiQuery && self.lastResults && !force){
+                        qmLog.info("Why are we researching with the same query?");
+                        var resultsList = convertVariablesToToResultsList(self.lastResults);
+                        if(true || !dialogParameters.requestParams.excludeLocal){resultsList.push(searchForMoreItem);}
+                        deferred.resolve(resultsList);
+                        //deferred.resolve(self.items);
                         return deferred.promise;
                     }
-                    dialogParameters.requestParams.excludeLocal = self.dialogParameters.excludeLocal;
+                    if(!dialogParameters.requestParams.excludeLocal){
+                        dialogParameters.requestParams.excludeLocal = self.dialogParameters.excludeLocal;
+                    }
                     if(query && query !== ""){
                         dialogParameters.requestParams.searchPhrase = query;
                         self.lastApiQuery = query;
@@ -633,7 +647,9 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                         self.lastResults = variables;
                         qmLogService.debug('Got ' + self.lastResults.length + ' results matching ' + query);
                         showVariableList();
-                        deferred.resolve(convertVariablesToToResultsList(self.lastResults));
+                        var resultsList = convertVariablesToToResultsList(self.lastResults);
+                        if(true || !dialogParameters.requestParams.excludeLocal){resultsList.push(searchForMoreItem);}
+                        deferred.resolve(resultsList);
                         if(variables && variables.length){
                             if(variableSearchSuccessHandler){variableSearchSuccessHandler(variables);}
                         } else {
@@ -642,9 +658,34 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                     });
                     return deferred.promise;
                 }
-                function searchTextChange(text) { qmLogService.debug('Text changed to ' + text); }
+                self.querySearchAPI = function(){
+                    console.log("asdfasdf")
+                }
+                function searchTextChange(text) {
+                    qmLog.info('Text changed to ' + text);
+                    if(text === searchForMoreItem.name){
+                        querySearch(self.lastApiQuery);
+                    }
+                }
+                function removeSearchForMoreItem() {
+                    self.items = self.items.filter(function (itemFromList) {
+                        return itemFromList.name !== searchForMoreItem.name;
+                    });
+                }
                 function selectedItemChange(item) {
+                    qmLog.info('Item changed to ' + JSON.stringify(item));
+                    qmLog.info('self.searchText changed to ' + self.searchText);
                     if(!item){return;}
+                    if(item.name === searchForMoreItem.name){
+                        if(!dialogParameters.requestParams.excludeLocal){
+                            dialogParameters.requestParams.excludeLocal = true;
+                            self.searchText = self.lastApiQuery;
+                            querySearch(self.lastApiQuery, null, null, true);
+                        } else {
+                            //removeSearchForMoreItem();
+                        }
+                        return;
+                    }
                     self.selectedItem = item;
                     self.buttonText = "Select " + item.variable.name;
                     if(self.barcode){
@@ -654,7 +695,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                     $scope.variable = item.variable;
                     item.variable.lastSelectedAt = qm.timeHelper.getUnixTimestampInSeconds();
                     qm.userVariables.saveToLocalStorage(item.variable);
-                    qmLogService.debug('Item changed to ' + item.variable.name);
+                    qmLog.info('Item changed to ' + item.variable.name);
                     self.finish();
                 }
                 /**
@@ -1238,19 +1279,14 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
             if (accessToken) {request.headers = {"Authorization": "Bearer " + accessToken, 'Content-Type': "application/json"};}
             qmLogService.debug('GET ' + request.url, null, options.stackTrace);
             $http(request)
-                .then(function (response) {
-                    var data = response.data;
-                    var status = response.status;
-                    var headers = qmService.api.headersGetter(response.headers);
-                    var config = response.config;
-                    var statusText = response.statusText;
-                    qmLogService.debug('Got ' + route + ' ' + status + ' response: ' + ': ' + JSON.stringify(data).substring(0, 140) + '...', null, config.stackTrace);
+                .success(function (data, status, headers) {
+                    qmLogService.debug('Got ' + route + ' ' + status + ' response: ' + ': ' + JSON.stringify(data).substring(0, 140) + '...', null, options.stackTrace);
                     if(!data) {
                         var groupingHash = 'No data returned from this request';
                         qmLog.error(groupingHash, status + " response from url " + request.url, {groupingHash: groupingHash}, "error");
                     } else {
                         if (data.error) {
-                            generalApiErrorHandler(response);
+                            generalApiErrorHandler(data, status, headers, request, options);
                             if (requestSpecificErrorHandler){requestSpecificErrorHandler(data);}
                         }
                         qmService.navBar.setOfflineConnectionErrorShowing(false);
@@ -1258,10 +1294,10 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                         successHandler(data);
                     }
                 })
-                .catch(function (response) {
-                    generalApiErrorHandler(response);
-                    if (requestSpecificErrorHandler){requestSpecificErrorHandler(response.data);}
-                });
+                .error(function (data, status, headers) {
+                    generalApiErrorHandler(data, status, headers, request, options);
+                    if (requestSpecificErrorHandler){requestSpecificErrorHandler(data);}
+                }, onRequestFailed);
         });
     };
     qmService.post = function(route, requiredFields, body, successHandler, requestSpecificErrorHandler, options){
@@ -1294,9 +1330,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
             }
             //console.log("Log level is " + qmLog.getLogLevelName());
             var url = qmService.getQuantiModoUrl(route) + '?' + addGlobalUrlParamsToArray([]).join('&');
-            var request = {method : 'POST', url: url,
-                //responseType: 'json',
-                headers : {'Content-Type': "application/json", 'Accept': "application/json"}, data : JSON.stringify(body)};
+            var request = {method : 'POST', url: url, responseType: 'json', headers : {'Content-Type': "application/json", 'Accept': "application/json"}, data : JSON.stringify(body)};
             if(accessToken) {
                 qmLog.info('Using access token for POST ' + route + ": " + accessToken, options.stackTrace);
                 request.headers = {"Authorization" : "Bearer " + accessToken, 'Content-Type': "application/json", 'Accept': "application/json"};
@@ -1312,25 +1346,11 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                 qmLogService.info('Response from POST ' + route + ': ' + responseString);
                 if(successHandler){successHandler(response);}
             }
-            $http(request)
-                .then(function(response){
-                    function isSuccess(status) {
-                        var iStatus = Math.max(status, 0);
-                        return 200 <= iStatus && iStatus < 300;
-                    }
-
-                   if (isSuccess(response.status)) {
-                       generalSuccessHandler(response)
-                   } else {
-                       generalApiErrorHandler(response);
-                       if(requestSpecificErrorHandler){requestSpecificErrorHandler(data);}
-                   }
-                })
-                .catch(function(response) {
-                    generalApiErrorHandler(response);
-                    if(requestSpecificErrorHandler){requestSpecificErrorHandler(response.data);}
-                });
-        });
+            $http(request).success(generalSuccessHandler).error(function(data, status, headers){
+                generalApiErrorHandler(data, status, headers, request, options);
+                if(requestSpecificErrorHandler){requestSpecificErrorHandler(data);}
+            });
+        }, requestSpecificErrorHandler);
     };
     function setAfterLoginGoToUrlAndSendToLogin(){
         if($state.current.name.indexOf('login') !== -1){
@@ -1363,19 +1383,18 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
             }
         }
     }
-    function logApiError(data, status, headers, config, statusText) {
-        var errorName = status + ' from ' + config.method + ' ' + getPathWithoutQuery(config);
+    function logApiError(status, request, data, options) {
+        var errorName = status + ' from ' + request.method + ' ' + getPathWithoutQuery(request);
         if (data && data.error && typeof data.error === "string") {errorName = data.error;}
-        if (typeof data === "string") {errorName = data;}
         var metaData = {
-            debugApiUrl: getDebugApiUrlFromRequest(config),
+            debugApiUrl: getDebugApiUrlFromRequest(request),
             appUrl: window.location.href,
             groupingHash: errorName,
             requestData: data,
             status: status,
-            requestParams: qm.urlHelper.getAllQueryParamsFromUrlString(config.url),
-            config: config,
-            statusText: statusText
+            request: request,
+            requestOptions: options,
+            requestParams: qm.urlHelper.getAllQueryParamsFromUrlString(request.url)
         };
         if (data.error) {
             metaData.groupingHash = JSON.stringify(data.error);
@@ -1383,7 +1402,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
                 metaData.groupingHash = JSON.stringify(data.error.message);
             }
         }
-        qmLogService.error(errorName, metaData, config.stackTrace);
+        qmLogService.error(errorName, metaData, options.stackTrace);
     }
     function handle401Response(request, options, headers) {
         if(options && options.doNotSendToLogin){return;}
@@ -1397,12 +1416,7 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
         var pathWithQuery = request.url.match(/\/\/[^\/]+\/([^\.]+)/)[1];
         return pathWithQuery.split("?")[0];
     }
-    function generalApiErrorHandler(response){
-        var data = response.data;
-        var status = response.status;
-        var headers = qmService.api.headersGetter(response.headers);
-        var config = response.config;
-        var statusText = response.statusText;
+    function generalApiErrorHandler(data, status, headers, request, options){
         if(status === 302){return qmLogService.debug('Got 302 response from ' + JSON.stringify(request), null, options.stackTrace);}
         if(status === 401){
             qmLog.info('Got 401 response with headers: ' + JSON.stringify(headers), null, options.stackTrace);
@@ -1410,10 +1424,10 @@ angular.module('starter').factory('qmService', ["$http", "$q", "$rootScope", "$i
             return handle401Response(request, options, headers);
         }
         if(!data){
-            showOfflineError(options, config);
+            showOfflineError(options, request);
             return;
         }
-        logApiError(data, status, headers, config, statusText);
+        logApiError(status, request, data, options);
     }
     function getDebugApiUrlFromRequest(request){
         var debugUrl = request.method + " " + request.url;
