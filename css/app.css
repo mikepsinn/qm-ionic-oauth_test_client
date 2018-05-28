@@ -3070,7 +3070,7 @@ a:hover {
  */
 a {
   -webkit-user-drag: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent; }
   a[href]:hover {
     cursor: pointer; }
@@ -3307,7 +3307,7 @@ body,
   -webkit-text-size-adjust: none;
   -moz-text-size-adjust: none;
   text-size-adjust: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3716,7 +3716,7 @@ a.subdued {
   z-index: 11;
   width: 100%;
   height: 100%;
-  background-color: transparent; }
+  background-color: rgba(0, 0, 0, 0); }
   .action-sheet-backdrop.active {
     background-color: rgba(0, 0, 0, 0.4); }
 
@@ -5386,7 +5386,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   z-index: 10;
   width: 100%;
   height: 100%;
-  background-color: transparent; }
+  background-color: rgba(0, 0, 0, 0); }
   .popover-backdrop.active {
     background-color: rgba(0, 0, 0, 0.1); }
 
@@ -5510,7 +5510,7 @@ ion-tabs.tabs-striped.tabs-color-active-dark .tab-item.tab-item-active, ion-tabs
   left: 0;
   bottom: 0;
   right: 0;
-  background: transparent;
+  background: rgba(0, 0, 0, 0);
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -7087,51 +7087,51 @@ button.swiper-pagination-bullet {
   z-index: 10; }
 
 .swiper-container-3d .swiper-slide-shadow-left {
-  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.5)), to(transparent));
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0)));
   /* Safari 4+, Chrome */
-  background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Chrome 10+, Safari 5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 3.6-15 */
-  background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Opera 11.10-12.00 */
-  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 16+, IE10, Opera 12.50+ */ }
 
 .swiper-container-3d .swiper-slide-shadow-right {
-  background-image: -webkit-gradient(linear, right top, left top, from(rgba(0, 0, 0, 0.5)), to(transparent));
+  background-image: -webkit-gradient(linear, right top, left top, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0)));
   /* Safari 4+, Chrome */
-  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Chrome 10+, Safari 5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 3.6-15 */
-  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Opera 11.10-12.00 */
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), transparent);
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 16+, IE10, Opera 12.50+ */ }
 
 .swiper-container-3d .swiper-slide-shadow-top {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.5)), to(transparent));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0)));
   /* Safari 4+, Chrome */
-  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Chrome 10+, Safari 5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 3.6-15 */
-  background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Opera 11.10-12.00 */
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 16+, IE10, Opera 12.50+ */ }
 
 .swiper-container-3d .swiper-slide-shadow-bottom {
-  background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.5)), to(transparent));
+  background-image: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0)));
   /* Safari 4+, Chrome */
-  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Chrome 10+, Safari 5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 3.6-15 */
-  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.5), transparent);
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Opera 11.10-12.00 */
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
   /* Firefox 16+, IE10, Opera 12.50+ */ }
 
 /* Coverflow */
@@ -8493,8 +8493,8 @@ input:checked + .checkbox-icon:after {
     width: 0;
     height: 0;
     border-top: 5px solid;
-    border-right: 5px solid transparent;
-    border-left: 5px solid transparent;
+    border-right: 5px solid rgba(0, 0, 0, 0);
+    border-left: 5px solid rgba(0, 0, 0, 0);
     color: #999;
     content: "";
     pointer-events: none; }
@@ -9379,7 +9379,7 @@ a.button {
   -ms-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
   -webkit-user-drag: none;
   -ms-touch-action: none;
@@ -9965,7 +9965,7 @@ bdo[dir=ltr] {
   unicode-bidi: bidi-override; }
 
 html, body {
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-touch-callout: none;
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
@@ -13013,7 +13013,7 @@ md-input-container.md-input-has-value .md-select-value > span:not(.md-select-ico
   padding: 2px 2px 1px;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
   position: relative;
   box-sizing: content-box;
   min-width: 64px;
@@ -24421,7 +24421,7 @@ img.intro-primary-outcome-variable-rating-buttons {
   width: 100%; }
 
 .circle-page-button {
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
   border: none;
   outline: none;
   color: white;
@@ -24494,7 +24494,8 @@ md-fab-progress {
  * In development........These styles are in development and not yet finalised
  * Debuggers.............Helper styles and flags for development.
  */
-/*------------------------------------*    #Introduction
+/*------------------------------------*\
+    #Introduction
 \*------------------------------------*/
 /**
  * The code AND the comments use naming conventions to refer to each part of
@@ -24514,7 +24515,8 @@ md-fab-progress {
  *
  * "Label(s)" : the tooltip that fades in when hovering over a button.
 
-/*------------------------------------*    #SETTINGS | Variables
+/*------------------------------------*\
+    #SETTINGS | Variables
 \*------------------------------------*/
 /**
  * These variables are the default styles that serve as fallback and can be
@@ -24528,7 +24530,8 @@ md-fab-progress {
 /* SIZES -----------------------------*/
 /* SPACING ---------------------------*/
 /* OTHER VARIABLES -------------------*/
-/*------------------------------------*    #BASE | Raw styles
+/*------------------------------------*\
+    #BASE | Raw styles
 \*------------------------------------*/
 /**
  * The very core styling of the button.
@@ -24548,7 +24551,8 @@ md-fab-progress {
 .mfb-component--tl *, .mfb-component--tr *, .mfb-component--bl *, .mfb-component--br *, .mfb-component--tl *:before, .mfb-component--tr *:before, .mfb-component--bl *:before, .mfb-component--br *:before, .mfb-component--tl *:after, .mfb-component--tr *:after, .mfb-component--bl *:after, .mfb-component--br *:after {
   box-sizing: inherit; }
 
-/*------------------------------------*    #BASE | Modifiers
+/*------------------------------------*\
+    #BASE | Modifiers
 \*------------------------------------*/
 /**
  * These styles depends on the placement of the button.
@@ -24574,7 +24578,8 @@ md-fab-progress {
   right: 0;
   bottom: 0; }
 
-/*------------------------------------*    #BUTTONS | Base
+/*------------------------------------*\
+    #BUTTONS | Base
 \*------------------------------------*/
 .mfb-component__button--main, .mfb-component__button--child {
   background-color: #1BB76E;
@@ -24632,7 +24637,8 @@ md-fab-progress {
   -webkit-transform: scale(1) rotate(0deg);
   transform: scale(1) rotate(0deg); }
 
-/*------------------------------------*    #BUTTONS | Modifiers
+/*------------------------------------*\
+    #BUTTONS | Modifiers
 \*------------------------------------*/
 .mfb-component__button--main {
   height: 56px;
@@ -24672,7 +24678,8 @@ md-fab-progress {
 [data-mfb-state="open"] .mfb-component__main-icon--active {
   opacity: 1; }
 
-/*------------------------------------*    #BUTTONS | Animations
+/*------------------------------------*\
+    #BUTTONS | Animations
 \*------------------------------------*/
 /**
  * SLIDE IN + FADE
@@ -25118,7 +25125,8 @@ md-fab-progress {
   transform: translateY(-280px) scale(1);
   transition-delay: 0.2s; }
 
-/*------------------------------------*    #LABELS | base
+/*------------------------------------*\
+    #LABELS | base
 \*------------------------------------*/
 /**
  * These are the labels associated to each button,
@@ -25149,7 +25157,8 @@ md-fab-progress {
   opacity: 1;
   transition: all 0.3s; }
 
-/*------------------------------------*    #LABELS | Modifiers
+/*------------------------------------*\
+    #LABELS | Modifiers
 \*------------------------------------*/
 .mfb-component--br [data-mfb-label]:after, .mfb-component--tr [data-mfb-label]:after {
   content: attr(data-mfb-label);
@@ -25167,13 +25176,15 @@ md-fab-progress {
   content: attr(data-mfb-label);
   left: 70px; }
 
-/*------------------------------------*    #DEVELOPMENT | In development
+/*------------------------------------*\
+    #DEVELOPMENT | In development
 \*------------------------------------*/
 /**
  * This part is where unfinished code should stay.
  * When a feature is ready(sh) move these styles to their proper place.
  */
-/*------------------------------------*    #DEVELOPMENT | Debuggers
+/*------------------------------------*\
+    #DEVELOPMENT | Debuggers
 \*------------------------------------*/
 /**
  * These are mainly helpers for development. They do not have to end up
